@@ -32,13 +32,13 @@ public class ItemRepositoryImp implements ItemRepository {
     @Override
     public Item updateItem(long itemId, Item item) {
         Item upItem = getItemById(itemId);
-        if (!upItem.getName().equals(item.getName()) & item.getName() != null) {
+        if (!upItem.getName().equals(item.getName()) && item.getName() != null) {
             upItem.setName(item.getName());
         }
-        if (!upItem.getDescription().equals(item.getDescription()) & item.getDescription() != null) {
+        if (!upItem.getDescription().equals(item.getDescription()) && item.getDescription() != null) {
             upItem.setDescription(item.getDescription());
         }
-        if (upItem.getAvailable() != item.getAvailable() & item.getAvailable() != null) {
+        if (upItem.getAvailable() != item.getAvailable() && item.getAvailable() != null) {
             upItem.setAvailable(item.getAvailable());
         }
         return upItem;
@@ -61,8 +61,8 @@ public class ItemRepositoryImp implements ItemRepository {
                 .filter(Item::getAvailable).collect(Collectors.toList());
         List<Item> searchResult = new ArrayList<>();
         for (Item item : sortedListByUserAndAvailable) {
-            if (!search.isBlank() & (item.getName().toLowerCase().contains(search) ||
-                    item.getDescription().toLowerCase().contains(search))) {
+            if (!search.isBlank() && (item.getName().toLowerCase().contains(search)
+                    || item.getDescription().toLowerCase().contains(search))) {
                 searchResult.add(item);
             }
         }
