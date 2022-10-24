@@ -30,10 +30,10 @@ public class UserRepositoryImp implements UserRepository {
     @Override
     public User updateUser(long userId, User user) {
         User userUpdate = getUserById(userId);
-        if (!userUpdate.getName().equals(user.getName()) & user.getName() != null) {
+        if (!userUpdate.getName().equals(user.getName()) && user.getName() != null) {
             userUpdate.setName(user.getName());
         }
-        if (!userUpdate.getEmail().equals(user.getEmail()) & user.getEmail() != null) {
+        if (!userUpdate.getEmail().equals(user.getEmail()) && user.getEmail() != null) {
             userUpdate.setEmail(user.getEmail());
         }
         storageUser.put(userId, userUpdate);
