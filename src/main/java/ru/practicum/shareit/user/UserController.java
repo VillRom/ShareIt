@@ -33,7 +33,7 @@ public class UserController {
     }
 
     @PostMapping()
-    public UserDto saveUser (@RequestBody User user) {
+    public UserDto saveUser(@RequestBody User user) {
         return mapperUser.userToUserDto(userService.addUser(user));
     }
 

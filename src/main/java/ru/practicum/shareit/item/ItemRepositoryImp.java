@@ -32,13 +32,13 @@ public class ItemRepositoryImp implements ItemRepository {
     @Override
     public Item updateItem(long itemId, Item item) {
         Item upItem = getItemById(itemId);
-        if(!upItem.getName().equals(item.getName()) & item.getName() != null) {
+        if (!upItem.getName().equals(item.getName()) & item.getName() != null) {
             upItem.setName(item.getName());
         }
-        if(!upItem.getDescription().equals(item.getDescription()) & item.getDescription() != null) {
+        if (!upItem.getDescription().equals(item.getDescription()) & item.getDescription() != null) {
             upItem.setDescription(item.getDescription());
         }
-        if(upItem.getAvailable() != item.getAvailable() & item.getAvailable() != null) {
+        if (upItem.getAvailable() != item.getAvailable() & item.getAvailable() != null) {
             upItem.setAvailable(item.getAvailable());
         }
         return upItem;
