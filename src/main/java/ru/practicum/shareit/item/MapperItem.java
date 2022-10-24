@@ -19,7 +19,7 @@ public class MapperItem {
         return itemDto;
     }
 
-    public Item ItemDtoToItem(long userId, ItemDto itemDto) {
+    public Item itemDtoToItem(long userId, ItemDto itemDto) {
         Item item = new Item();
         item.setId(itemDto.getId());
         item.setUserId(userId);

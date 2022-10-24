@@ -28,7 +28,7 @@ public class ItemServiceImp implements ItemService {
             throw new NotFoundException("Такого пользователя не существует");
         }
         validation.validationItemDto(itemDto);
-        return mapperItem.itemToItemDto(itemRepository.saveItem(mapperItem.ItemDtoToItem(userId, itemDto)));
+        return mapperItem.itemToItemDto(itemRepository.saveItem(mapperItem.itemDtoToItem(userId, itemDto)));
     }
 
     @Override
@@ -55,7 +55,7 @@ public class ItemServiceImp implements ItemService {
         if (itemRepository.getItemById(itemId).getUserId() != userId) {
             throw new NotFoundException("Неправильно указан пользователь");
         }
-        return mapperItem.itemToItemDto(itemRepository.updateItem(itemId, mapperItem.ItemDtoToItem(userId, item)));
+        return mapperItem.itemToItemDto(itemRepository.updateItem(itemId, mapperItem.itemDtoToItem(userId, item)));
     }
 
     @Override
