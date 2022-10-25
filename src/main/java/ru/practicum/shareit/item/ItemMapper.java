@@ -1,16 +1,16 @@
 package ru.practicum.shareit.item;
 
-import org.springframework.stereotype.Component;
+import lombok.experimental.UtilityClass;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-@Component
-public class MapperItem {
+@UtilityClass
+public class ItemMapper {
 
-    public ItemDto itemToItemDto(Item item) {
+    public static ItemDto itemToItemDto(Item item) {
         ItemDto itemDto = new ItemDto();
         itemDto.setId(item.getId());
         itemDto.setName(item.getName());
@@ -19,7 +19,7 @@ public class MapperItem {
         return itemDto;
     }
 
-    public Item itemDtoToItem(long userId, ItemDto itemDto) {
+    public static Item itemDtoToItem(long userId, ItemDto itemDto) {
         Item item = new Item();
         item.setId(itemDto.getId());
         item.setUserId(userId);
@@ -29,11 +29,7 @@ public class MapperItem {
         return item;
     }
 
-    public List<ItemDto> getItemsDtoFromItems(List<Item> items) {
-        List<ItemDto> itemDtoList = new ArrayList<>();
-        for (Item item : items) {
-            itemDtoList.add(itemToItemDto(item));
-        }
-        return itemDtoList;
+    public static List<ItemDto> getItemsDtoFromItems(List<Item> items) {
+        return items.stream().map(ItemMapper::itemToItemDto).collect(Collectors.toList());
     }
 }

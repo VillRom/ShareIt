@@ -1,6 +1,7 @@
 package ru.practicum.shareit.user;
 
 import org.springframework.stereotype.Repository;
+import ru.practicum.shareit.exception.EmailException;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.ArrayList;
@@ -16,6 +17,9 @@ public class UserRepositoryImp implements UserRepository {
 
     @Override
     public User saveUser(User user) {
+        if (storageUser.values().stream().anyMatch(user1 -> user1.getEmail().equals(user.getEmail()))) {
+            throw new EmailException("Такая почта: " + user.getEmail() + " уже использована");
+        }
         user.setId(id);
         id++;
         storageUser.put(user.getId(), user);
@@ -28,15 +32,18 @@ public class UserRepositoryImp implements UserRepository {
     }
 
     @Override
-    public User updateUser(long userId, User user) {
-        User userUpdate = getUserById(userId);
+    public User updateUser(User user) {
+        if (storageUser.values().stream().anyMatch(user1 -> user1.getEmail().equals(user.getEmail()))) {
+            throw new EmailException("Такая почта: " + user.getEmail() + " уже использована");
+        }
+        User userUpdate = getUserById(user.getId());
         if (!userUpdate.getName().equals(user.getName()) && user.getName() != null) {
             userUpdate.setName(user.getName());
         }
         if (!userUpdate.getEmail().equals(user.getEmail()) && user.getEmail() != null) {
             userUpdate.setEmail(user.getEmail());
         }
-        storageUser.put(userId, userUpdate);
+        storageUser.put(user.getId(), userUpdate);
         return userUpdate;
     }
 

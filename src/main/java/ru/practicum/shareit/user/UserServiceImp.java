@@ -2,10 +2,8 @@ package ru.practicum.shareit.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.exception.EmailException;
 import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.validation.Validation;
+import ru.practicum.shareit.user.dto.UserDto;
 
 import java.util.List;
 
@@ -15,39 +13,30 @@ public class UserServiceImp implements UserService {
 
     private final UserRepository userRepository;
 
-    private final Validation validation;
-
     @Override
-    public User addUser(User user) {
-        if (userRepository.getAllUsers().stream().anyMatch(user1 -> user1.getEmail().equals(user.getEmail()))) {
-            throw new EmailException("Такая почта: " + user.getEmail() + " уже использована");
-        }
-        validation.validationUser(user);
-        return userRepository.saveUser(user);
+    public UserDto addUser(UserDto user) {
+        return UserMapper.userToUserDto(userRepository.saveUser(UserMapper.userDtoToUser(user)));
     }
 
     @Override
-    public User findUserById(long id) {
+    public UserDto findUserById(long id) {
         if (userRepository.getUserById(id) == null) {
             throw new NotFoundException("Пользователь с id = " + id + " не найден");
         }
-        return userRepository.getUserById(id);
+        return UserMapper.userToUserDto(userRepository.getUserById(id));
     }
 
     @Override
-    public List<User> getAllUsers() {
-        return userRepository.getAllUsers();
+    public List<UserDto> getAllUsers() {
+        return UserMapper.getUsersDtoFromUsers(userRepository.getAllUsers());
     }
 
     @Override
-    public User updateUserById(long userId, User user) {
-        if (userRepository.getUserById(userId) == null) {
-            throw new NotFoundException("Пользователь с id = " + userId + " не найден");
+    public UserDto updateUserById(UserDto user) {
+        if (userRepository.getUserById(user.getId()) == null) {
+            throw new NotFoundException("Пользователь с id = " + user.getId() + " не найден");
         }
-        if (userRepository.getAllUsers().stream().anyMatch(user1 -> user1.getEmail().equals(user.getEmail()))) {
-            throw new EmailException("Такая почта: " + user.getEmail() + " уже использована");
-        }
-        return userRepository.updateUser(userId, user);
+        return UserMapper.userToUserDto(userRepository.updateUser(UserMapper.userDtoToUser(user)));
     }
 
     @Override

@@ -10,7 +10,7 @@ public interface UserRepository {
 
     User getUserById(long userId);
 
-    User updateUser(long userId, User user);
+    User updateUser(User user);
 
     void deleteUserById(long userId);
 

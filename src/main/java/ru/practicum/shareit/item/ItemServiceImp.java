@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.user.UserRepository;
-import ru.practicum.shareit.validation.Validation;
 
 import java.util.List;
 
@@ -17,18 +16,12 @@ public class ItemServiceImp implements ItemService {
 
     private final UserRepository userRepository;
 
-    private final MapperItem mapperItem;
-
-
-    private final Validation validation;
-
     @Override
     public ItemDto addItem(long userId, ItemDto itemDto) {
         if (userRepository.getUserById(userId) == null) {
             throw new NotFoundException("Такого пользователя не существует");
         }
-        validation.validationItemDto(itemDto);
-        return mapperItem.itemToItemDto(itemRepository.saveItem(mapperItem.itemDtoToItem(userId, itemDto)));
+        return ItemMapper.itemToItemDto(itemRepository.saveItem(ItemMapper.itemDtoToItem(userId, itemDto)));
     }
 
     @Override
@@ -36,7 +29,7 @@ public class ItemServiceImp implements ItemService {
         if (userRepository.getUserById(userId) == null) {
             throw new NotFoundException("Такого пользователя не существует");
         }
-        return mapperItem.itemToItemDto(itemRepository.getItemById(id));
+        return ItemMapper.itemToItemDto(itemRepository.getItemById(id));
     }
 
     @Override
@@ -44,7 +37,7 @@ public class ItemServiceImp implements ItemService {
         if (userRepository.getUserById(userId) == null) {
             throw new NotFoundException("Такого пользователя не существует");
         }
-        return mapperItem.getItemsDtoFromItems(itemRepository.getAllItems(userId));
+        return ItemMapper.getItemsDtoFromItems(itemRepository.getAllItems(userId));
     }
 
     @Override
@@ -55,7 +48,7 @@ public class ItemServiceImp implements ItemService {
         if (itemRepository.getItemById(itemId).getUserId() != userId) {
             throw new NotFoundException("Неправильно указан пользователь");
         }
-        return mapperItem.itemToItemDto(itemRepository.updateItem(itemId, mapperItem.itemDtoToItem(userId, item)));
+        return ItemMapper.itemToItemDto(itemRepository.updateItem(itemId, ItemMapper.itemDtoToItem(userId, item)));
     }
 
     @Override
@@ -68,6 +61,6 @@ public class ItemServiceImp implements ItemService {
         if (userRepository.getUserById(userId) == null) {
             throw new NotFoundException("Такого пользователя не существует");
         }
-        return mapperItem.getItemsDtoFromItems(itemRepository.search(query));
+        return ItemMapper.getItemsDtoFromItems(itemRepository.search(query));
     }
 }
