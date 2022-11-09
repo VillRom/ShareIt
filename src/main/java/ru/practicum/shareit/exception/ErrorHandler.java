@@ -6,16 +6,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.persistence.EntityNotFoundException;
+
 @RestControllerAdvice
 @Slf4j
 public class ErrorHandler {
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleValidationException(final ValidationException e) {
-        log.warn("Исключение! ValidationException: {}", e.getMessage());
-        return new ErrorResponse(e.getMessage());
-    }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -33,8 +28,15 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleThrowable(final Throwable e) {
-        log.warn("Исключение! Throwable: {}", e.getMessage());
+    public ErrorResponse handleBookingException(final BookingException e) {
+        log.warn("Исключение! BookingException: {}", e.getMessage());
+        return new ErrorResponse(e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleEntityNotFoundException(final EntityNotFoundException e) {
+        log.warn("Исключение! EntityNotFoundException: {}", e.getMessage());
         return new ErrorResponse(e.getMessage());
     }
 }
