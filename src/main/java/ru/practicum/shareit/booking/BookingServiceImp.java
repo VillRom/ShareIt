@@ -48,7 +48,7 @@ public class BookingServiceImp implements BookingService {
         if (!userRepository.existsById(authorId)) {
             throw new NotFoundException("Такого пользователя не существует");
         }
-        if(authorId != bookingRepository.getReferenceById(bookingId).getItem().getUserId()
+        if (authorId != bookingRepository.getReferenceById(bookingId).getItem().getUserId()
                 && authorId != bookingRepository.getReferenceById(bookingId).getBooker().getId()) {
             throw new NotFoundException("В доступе отказано");
         }
