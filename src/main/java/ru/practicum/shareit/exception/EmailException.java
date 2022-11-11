@@ -1,6 +1,8 @@
 package ru.practicum.shareit.exception;
 
-public class EmailException extends RuntimeException {
+import org.springframework.dao.DataIntegrityViolationException;
+
+public class EmailException extends DataIntegrityViolationException {
 
     public EmailException(String message) {
         super(message);
