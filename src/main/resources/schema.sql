@@ -23,8 +23,7 @@ CREATE TABLE IF NOT EXISTS bookings
     item_id BIGINT REFERENCES items(id),
     booker_id BIGINT REFERENCES users(id),
     status varchar,
-    CONSTRAINT booking_pk PRIMARY KEY (id),
-    CONSTRAINT time_after CHECK (end_date > start_date)
+    CONSTRAINT booking_pk PRIMARY KEY (id)
 );
 CREATE TABLE IF NOT EXISTS comments
 (

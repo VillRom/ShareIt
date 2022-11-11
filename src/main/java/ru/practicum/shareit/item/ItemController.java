@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.dto.ItemWithDateBookingDto;
+import ru.practicum.shareit.item.dto.ItemWithDateBooking;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -17,12 +17,12 @@ public class ItemController {
     private final ItemService itemService;
 
     @GetMapping
-    public List<ItemWithDateBookingDto> getItemsFromUser(@RequestHeader("X-Sharer-User-Id") long userId) {
+    public List<ItemWithDateBooking> getItemsFromUser(@RequestHeader("X-Sharer-User-Id") long userId) {
         return itemService.getAllItemsFromUser(userId);
     }
 
     @GetMapping("/{itemId}")
-    public ItemWithDateBookingDto getItemFromUser(@RequestHeader("X-Sharer-User-Id") long userId, @PathVariable long itemId) {
+    public ItemWithDateBooking getItemFromUser(@RequestHeader("X-Sharer-User-Id") long userId, @PathVariable long itemId) {
         return itemService.findItemById(userId, itemId);
     }
 

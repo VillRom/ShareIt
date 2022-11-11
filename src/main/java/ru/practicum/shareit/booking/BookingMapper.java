@@ -3,9 +3,7 @@ package ru.practicum.shareit.booking;
 import lombok.experimental.UtilityClass;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingResponseDto;
-import ru.practicum.shareit.item.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.user.UserMapper;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.List;
@@ -43,8 +41,8 @@ public class BookingMapper {
         bookingDto.setId(booking.getId());
         bookingDto.setStart(booking.getStart());
         bookingDto.setEnd(booking.getEnd());
-        bookingDto.setBooker(UserMapper.userToUserDto(booking.getBooker()));
-        bookingDto.setItem(ItemMapper.itemToItemDto(booking.getItem()));
+        bookingDto.setBooker(new BookingResponseDto.User(booking.getBooker().getId(), booking.getBooker().getName()));
+        bookingDto.setItem(new BookingResponseDto.Item(booking.getItem().getId(), booking.getItem().getName()));
         bookingDto.setStatus(booking.getStatus());
         return bookingDto;
     }

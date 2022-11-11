@@ -1,10 +1,10 @@
 package ru.practicum.shareit.item;
 
 import lombok.experimental.UtilityClass;
-import ru.practicum.shareit.booking.dto.BookingDto;
-import ru.practicum.shareit.item.dto.CommentDto;
+import ru.practicum.shareit.booking.Booking;
+import ru.practicum.shareit.item.comment.Comment;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.dto.ItemWithDateBookingDto;
+import ru.practicum.shareit.item.dto.ItemWithDateBooking;
 import ru.practicum.shareit.item.model.Item;
 
 import java.time.LocalDateTime;
@@ -38,20 +38,39 @@ public class ItemMapper {
         return items.stream().map(ItemMapper::itemToItemDto).collect(Collectors.toList());
     }
 
-    public static ItemWithDateBookingDto itemToItemWithDateBookingDto(Item item, List<BookingDto> bookingDtoList,
-                                                                      List<CommentDto> comments) {
-        Optional<BookingDto> last = bookingDtoList.stream().filter(booking -> booking.getEnd()
+    public static ItemWithDateBooking itemToItemWithDateBookingDto(Item item, List<Booking> bookingList,
+                                                                   List<Comment> comments) {
+        Optional<Booking> last = bookingList.stream().filter(booking -> booking.getEnd()
                 .isBefore(LocalDateTime.now())).findFirst();
-        Optional<BookingDto> next = bookingDtoList.stream().filter(booking -> booking.getStart()
+        Optional<Booking> next = bookingList.stream().filter(booking -> booking.getStart()
                 .isAfter(LocalDateTime.now())).findFirst();
-        ItemWithDateBookingDto itemWithDateBookingDto = new ItemWithDateBookingDto();
-        itemWithDateBookingDto.setLastBooking(last.orElse(null));
-        itemWithDateBookingDto.setNextBooking(next.orElse(null));
+        ItemWithDateBooking itemWithDateBookingDto = new ItemWithDateBooking();
+        if (last.isEmpty()) {
+            itemWithDateBookingDto.setLastBooking(null);
+        } else {
+            itemWithDateBookingDto.setLastBooking(new ItemWithDateBooking.Booking(last.get().getId(),
+                    last.get().getBooker().getId()));
+        }
+        if (next.isEmpty()) {
+            itemWithDateBookingDto.setNextBooking(null);
+        } else {
+            itemWithDateBookingDto.setNextBooking(new ItemWithDateBooking.Booking(next.get().getId(),
+                    next.get().getBooker().getId()));
+        }
         itemWithDateBookingDto.setAvailable(item.getAvailable());
         itemWithDateBookingDto.setDescription(item.getDescription());
         itemWithDateBookingDto.setName(item.getName());
         itemWithDateBookingDto.setId(item.getId());
-        itemWithDateBookingDto.setComments(comments);
+        itemWithDateBookingDto.setComments(commentsToItemWithDateBookingComments(comments));
         return itemWithDateBookingDto;
+    }
+
+    private ItemWithDateBooking.Comment commentToItemWithDateBookingComment(Comment comment) {
+        return new ItemWithDateBooking.Comment(comment.getId(), comment.getText(),
+                comment.getAuthor().getName(), comment.getCreated());
+    }
+
+    private List<ItemWithDateBooking.Comment> commentsToItemWithDateBookingComments(List<Comment> comments) {
+        return comments.stream().map(ItemMapper::commentToItemWithDateBookingComment).collect(Collectors.toList());
     }
 }

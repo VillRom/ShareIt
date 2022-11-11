@@ -1,6 +1,6 @@
 package ru.practicum.shareit.item.model;
 
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -11,7 +11,7 @@ public class Item {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(name = "user_id")
     private long userId;

@@ -2,6 +2,7 @@ package ru.practicum.shareit.booking;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingResponseDto;
 import ru.practicum.shareit.exception.BookingException;
@@ -10,11 +11,13 @@ import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.user.UserRepository;
 
 import javax.persistence.EntityNotFoundException;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class BookingServiceImp implements BookingService {
 
     private final BookingRepository bookingRepository;
@@ -24,6 +27,7 @@ public class BookingServiceImp implements BookingService {
     private final UserRepository userRepository;
 
     @Override
+    @Transactional
     public BookingResponseDto addBooking(long userId, BookingDto booking) {
         if (!itemRepository.getReferenceById(booking.getItemId()).getAvailable()) {
             throw new BookingException("Бронорование не доступно");
@@ -112,6 +116,7 @@ public class BookingServiceImp implements BookingService {
     }
 
     @Override
+    @Transactional
     public BookingResponseDto updateStatusBooking(long authorId, long bookingId, boolean approved) {
         Booking booking = bookingRepository.getReferenceById(bookingId);
         if (booking.getItem().getUserId() != authorId) {

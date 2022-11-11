@@ -2,7 +2,7 @@ package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.booking.BookingMapper;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.exception.BookingException;
 import ru.practicum.shareit.exception.NotFoundException;
@@ -10,7 +10,7 @@ import ru.practicum.shareit.item.comment.CommentMapper;
 import ru.practicum.shareit.item.comment.CommentRepository;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.dto.ItemWithDateBookingDto;
+import ru.practicum.shareit.item.dto.ItemWithDateBooking;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.UserRepository;
 
@@ -20,6 +20,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ItemServiceImp implements ItemService {
 
     private final ItemRepository itemRepository;
@@ -31,6 +32,7 @@ public class ItemServiceImp implements ItemService {
     private final CommentRepository commentRepository;
 
     @Override
+    @Transactional
     public ItemDto addItem(long userId, ItemDto itemDto) {
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException("Такого пользователя не существует");
@@ -39,7 +41,7 @@ public class ItemServiceImp implements ItemService {
     }
 
     @Override
-    public ItemWithDateBookingDto findItemById(long userId, long id) {
+    public ItemWithDateBooking findItemById(long userId, long id) {
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException("Такого пользователя не существует");
         }
@@ -47,27 +49,27 @@ public class ItemServiceImp implements ItemService {
             throw new NotFoundException("Такого Item не существует");
         }
         return ItemMapper.itemToItemWithDateBookingDto(itemRepository.getReferenceById(id),
-                BookingMapper.bookingsToBookingDtoList(bookingRepository.findAllByItem_IdAndItem_UserId(id, userId)),
-                CommentMapper.commentsToCommentDtoList(commentRepository.findAllByItem_Id(id)));
+                bookingRepository.findAllByItem_IdAndItem_UserId(id, userId),
+                commentRepository.findAllByItem_Id(id));
     }
 
     @Override
-    public List<ItemWithDateBookingDto> getAllItemsFromUser(long userId) {
+    public List<ItemWithDateBooking> getAllItemsFromUser(long userId) {
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException("Такого пользователя не существует");
         }
         List<Item> items = itemRepository.findAllByUserId(userId);
-        List<ItemWithDateBookingDto> itemsWithDateBookingDto = new ArrayList<>();
+        List<ItemWithDateBooking> itemsWithDateBookingDto = new ArrayList<>();
         for (Item item : items) {
             itemsWithDateBookingDto.add(ItemMapper.itemToItemWithDateBookingDto(item,
-                    BookingMapper.bookingsToBookingDtoList(bookingRepository
-                            .findAllByItem_IdAndItem_UserId(item.getId(), item.getUserId())),
-                    CommentMapper.commentsToCommentDtoList(commentRepository.findAllByItem_Id(item.getId()))));
+                    bookingRepository.findAllByItem_IdAndItem_UserId(item.getId(), item.getUserId()),
+                    commentRepository.findAllByItem_Id(item.getId())));
         }
         return itemsWithDateBookingDto;
     }
 
     @Override
+    @Transactional
     public ItemDto updateItemById(long userId, ItemDto item, long itemId) {
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException("Такого пользователя не существует");
@@ -96,10 +98,11 @@ public class ItemServiceImp implements ItemService {
         if (query.isBlank()) {
             return new ArrayList<>(List.of());
         }
-        return ItemMapper.getItemsDtoFromItems(itemRepository.findByAvailableIsTrueAndDescriptionContainingIgnoreCaseOrNameContainingIgnoreCase(query, query));
+        return ItemMapper.getItemsDtoFromItems(itemRepository.findInAvailableItems(query, query));
     }
 
     @Override
+    @Transactional
     public CommentDto addComment(long userId, long itemId, CommentDto comment) {
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException("Пользователь не найден");
