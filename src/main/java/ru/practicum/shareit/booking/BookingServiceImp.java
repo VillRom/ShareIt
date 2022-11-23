@@ -73,24 +73,24 @@ public class BookingServiceImp implements BookingService {
         switch (state) {
             case "ALL":
                 return BookingMapper.bookingsToBookingResponseDtoList(bookingRepository
-                        .findAllByBooker_IdOrderByStartDesc(authorId, PageRequest.of(from-1, size)).getContent());
+                        .findAllByBooker_IdOrderByStartDesc(authorId, PageRequest.of(from - 1, size)).getContent());
             case "CURRENT":
                 return BookingMapper.bookingsToBookingResponseDtoList(bookingRepository
                         .findAllByBooker_IdAndStartIsBeforeAndEndIsAfterOrderByStartDesc(authorId, dateTime, dateTime,
-                                PageRequest.of(from-1, size)).getContent());
+                                PageRequest.of(from - 1, size)).getContent());
             case "FUTURE":
                 return BookingMapper.bookingsToBookingResponseDtoList(bookingRepository
                         .findAllByBooker_IdAndStartIsAfterOrderByStartDesc(authorId, dateTime,
-                                PageRequest.of(from-1, size)).getContent());
+                                PageRequest.of(from - 1, size)).getContent());
             case "PAST":
                 return BookingMapper.bookingsToBookingResponseDtoList(bookingRepository
                         .findAllByBooker_IdAndEndIsBeforeOrderByStartDesc(authorId, dateTime,
-                                PageRequest.of(from-1, size)).getContent());
+                                PageRequest.of(from - 1, size)).getContent());
             case "WAITING":
             case "REJECTED":
                 return BookingMapper.bookingsToBookingResponseDtoList(bookingRepository
                         .findAllByBooker_IdAndStatusContainingOrderByStartDesc(authorId, state,
-                                PageRequest.of(from-1, size)).getContent());
+                                PageRequest.of(from - 1, size)).getContent());
             default:
                 throw new BookingException("Unknown state: " + state);
         }

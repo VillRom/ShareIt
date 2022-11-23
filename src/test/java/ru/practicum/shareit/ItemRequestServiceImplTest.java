@@ -73,6 +73,7 @@ public class ItemRequestServiceImplTest {
         Assertions.assertEquals(itemRequestDtoTest.getId(), itemRequestDto.getId());
         Assertions.assertEquals(itemRequestDtoTest.getDescription(), itemRequestDto.getDescription());
     }
+    
     @Test
     void addRequestExceptionTest() {
         final NotFoundException exception = Assertions.assertThrows(

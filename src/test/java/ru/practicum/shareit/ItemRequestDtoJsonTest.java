@@ -17,7 +17,7 @@ public class ItemRequestDtoJsonTest {
     @Autowired
     private JacksonTester<ItemRequestDto> json;
 
-    private final LocalDateTime localTime = LocalDateTime.of(2022, 11, 10, 10 ,10 ,0);
+    private final LocalDateTime localTime = LocalDateTime.of(2022, 11, 10, 10,10,0);
 
     @Test
     void testSerialize() throws Exception {
