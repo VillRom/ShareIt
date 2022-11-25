@@ -1,6 +1,8 @@
 package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.BookingRepository;
@@ -35,7 +37,7 @@ public class ItemServiceImp implements ItemService {
     @Transactional
     public ItemDto addItem(long userId, ItemDto itemDto) {
         if (!userRepository.existsById(userId)) {
-            throw new NotFoundException("Такого пользователя не существует");
+            throw new NotFoundException("Пользователь не найден");
         }
         return ItemMapper.itemToItemDto(itemRepository.save(ItemMapper.itemDtoToItem(userId, itemDto)));
     }
@@ -43,7 +45,7 @@ public class ItemServiceImp implements ItemService {
     @Override
     public ItemWithDateBooking findItemById(long userId, long id) {
         if (!userRepository.existsById(userId)) {
-            throw new NotFoundException("Такого пользователя не существует");
+            throw new NotFoundException("Пользователь не найден");
         }
         if (!itemRepository.existsById(id)) {
             throw new NotFoundException("Такого Item не существует");
@@ -54,11 +56,14 @@ public class ItemServiceImp implements ItemService {
     }
 
     @Override
-    public List<ItemWithDateBooking> getAllItemsFromUser(long userId) {
+    public List<ItemWithDateBooking> getAllItemsFromUser(long userId, int from, int size) {
         if (!userRepository.existsById(userId)) {
-            throw new NotFoundException("Такого пользователя не существует");
+            throw new NotFoundException("Пользователь не найден");
         }
-        List<Item> items = itemRepository.findAllByUserId(userId);
+        if (from < 0 || size <= 0) {
+            throw new BookingException("Переданное значение меньше или равно нулю");
+        }
+        Page<Item> items = itemRepository.findAllByUserId(userId, PageRequest.of(from, size));
         List<ItemWithDateBooking> itemsWithDateBookingDto = new ArrayList<>();
         for (Item item : items) {
             itemsWithDateBookingDto.add(ItemMapper.itemToItemWithDateBookingDto(item,
@@ -72,7 +77,7 @@ public class ItemServiceImp implements ItemService {
     @Transactional
     public ItemDto updateItemById(long userId, ItemDto item, long itemId) {
         if (!userRepository.existsById(userId)) {
-            throw new NotFoundException("Такого пользователя не существует");
+            throw new NotFoundException("Пользователь не найден");
         }
         Item updateItem = itemRepository.getReferenceById(itemId);
         if (updateItem.getUserId() != userId) {
@@ -93,7 +98,7 @@ public class ItemServiceImp implements ItemService {
     @Override
     public List<ItemDto> searchItems(long userId, String query) {
         if (!userRepository.existsById(userId)) {
-            throw new NotFoundException("Такого пользователя не существует");
+            throw new NotFoundException("Пользователь не найден");
         }
         if (query.isBlank()) {
             return new ArrayList<>(List.of());

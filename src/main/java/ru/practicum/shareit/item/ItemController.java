@@ -17,12 +17,15 @@ public class ItemController {
     private final ItemService itemService;
 
     @GetMapping
-    public List<ItemWithDateBooking> getItemsFromUser(@RequestHeader("X-Sharer-User-Id") long userId) {
-        return itemService.getAllItemsFromUser(userId);
+    public List<ItemWithDateBooking> getItemsFromUser(@RequestHeader("X-Sharer-User-Id") long userId,
+                                                      @RequestParam(defaultValue = "0") int from,
+                                                      @RequestParam(defaultValue = "10") int size) {
+        return itemService.getAllItemsFromUser(userId, from, size);
     }
 
     @GetMapping("/{itemId}")
-    public ItemWithDateBooking getItemFromUser(@RequestHeader("X-Sharer-User-Id") long userId, @PathVariable long itemId) {
+    public ItemWithDateBooking getItemFromUser(@RequestHeader("X-Sharer-User-Id") long userId,
+                                               @PathVariable long itemId) {
         return itemService.findItemById(userId, itemId);
     }
 

@@ -20,13 +20,6 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse handleEmailException(final EmailException e) {
-        log.warn("Исключение! EmailException: {}", e.getMessage());
-        return new ErrorResponse(e.getMessage());
-    }
-
-    @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleBookingException(final BookingException e) {
         log.warn("Исключение! BookingException: {}", e.getMessage());
