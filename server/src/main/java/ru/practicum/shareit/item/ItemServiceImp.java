@@ -70,6 +70,7 @@ public class ItemServiceImp implements ItemService {
                     bookingRepository.findAllByItem_IdAndItem_UserId(item.getId(), item.getUserId()),
                     commentRepository.findAllByItem_Id(item.getId())));
         }
+        itemsWithDateBookingDto.sort((o1, o2) -> (int) (o1.getId() - o2.getId()));
         return itemsWithDateBookingDto;
     }
 
