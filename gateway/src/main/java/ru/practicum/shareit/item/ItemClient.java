@@ -11,7 +11,6 @@ import ru.practicum.shareit.client.BaseClient;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
 import java.util.Map;
 
 @Service
