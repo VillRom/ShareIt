@@ -41,10 +41,6 @@ public class BookingServiceImp implements BookingService {
                 itemRepository.getReferenceById(booking.getItemId()).getUserId() == userId) {
             throw new EntityNotFoundException("Вещь не найдена");
         }
-        if (booking.getStart().isBefore(LocalDateTime.now()) || booking.getEnd().isBefore(LocalDateTime.now()) ||
-                booking.getEnd().isBefore(booking.getStart())) {
-            throw new BookingException("Дата старта не может быть в прошлом");
-        }
         return BookingMapper.bookingToBookingResponseDto(bookingRepository.save(BookingMapper.bookingDtoToBooking(booking,
                 itemRepository.getReferenceById(booking.getItemId()), userRepository.getReferenceById(userId))));
     }

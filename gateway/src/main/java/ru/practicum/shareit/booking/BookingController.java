@@ -34,6 +34,9 @@ public class BookingController {
 	@PostMapping
 	public ResponseEntity<Object> bookItem(@RequestHeader("X-Sharer-User-Id") long userId,
 										   @RequestBody @Valid BookItemRequestDto requestDto) {
+		if (requestDto.getEnd().isBefore(requestDto.getStart())) {
+			throw new BookingException("Дата окончания бронирования не может быть раньше начала бронирования");
+		}
 		log.info("Добавление бронирования {}, userId={}", requestDto, userId);
 		return bookingClient.bookItem(userId, requestDto);
 	}

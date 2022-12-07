@@ -3,7 +3,6 @@ package ru.practicum.shareit.user.model;
 import lombok.Data;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
 
 @Data
 @Entity
@@ -14,7 +13,6 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Email
     @Column
     private String email;
 

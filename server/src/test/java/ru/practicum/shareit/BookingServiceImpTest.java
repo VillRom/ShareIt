@@ -131,21 +131,6 @@ public class BookingServiceImpTest {
     }
 
     @Test
-    void addBookingTestTimeExceptionItemTest() {
-        when(itemRepository.getReferenceById(anyLong()))
-                .thenReturn(item);
-        when(userRepository.existsById(anyLong()))
-                .thenReturn(true);
-        when(itemRepository.existsById(anyLong()))
-                .thenReturn(true);
-        bookingDto.setStart(LocalDateTime.now().minusSeconds(5));
-        final BookingException exception = Assertions.assertThrows(
-                BookingException.class,
-                () -> bookingService.addBooking(2, bookingDto));
-        Assertions.assertEquals("Дата старта не может быть в прошлом", exception.getMessage());
-    }
-
-    @Test
     void getBookingByAuthorOrOwnerTest() {
         when(userRepository.existsById(anyLong()))
                 .thenReturn(true);
